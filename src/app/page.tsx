@@ -8,16 +8,17 @@ import { useState } from "react";
 
 export default function Home() {
   // const category = ['Land Animal', 'Bird', 'Fish', 'Insect']
-  const [category, setCategory] = useState<string>('')
+  const [category, setCategory] = useState<string>('all')
   const { categories, categoryLoading } = useCategories();
   const { animals, animalLoading } = useAnimals({category});
 
   const handleCategory = (category: string) => {
+    console.log(category);
     setCategory(category)
   }
   console.log(category);
 
-  // console.log(animals);
+  console.log(animals);
 
   return (
     <div className="h-[100vh]">
@@ -34,7 +35,7 @@ export default function Home() {
       </div>
       <div className="grid grid-cols-6 gap-8 mt-20">
         {
-          animalLoading ? <h1>Loading...</h1> : animals.map(animal => <AnimalCard key={animal._id} animal={animal} />)
+          animalLoading ? <h1 className="text-white">Loading...</h1> : animals.map(animal => <AnimalCard key={animal._id} animal={animal} />)
         }
       </div>
     </div>
