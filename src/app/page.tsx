@@ -4,19 +4,27 @@ import AnimalCard from "@/components/AnimalCard";
 import Button from "@/components/Button";
 import useAnimals from "@/hooks/useAnimals";
 import useCategories from "@/hooks/useCategories";
+import { useState } from "react";
 
 export default function Home() {
   // const category = ['Land Animal', 'Bird', 'Fish', 'Insect']
+  const [category, setCategory] = useState<string>('')
   const { categories, categoryLoading } = useCategories();
-  const { animals, animalLoading } = useAnimals();
-  console.log(animals);
+  const { animals, animalLoading } = useAnimals({category});
+
+  const handleCategory = (category: string) => {
+    setCategory(category)
+  }
+  console.log(category);
+
+  // console.log(animals);
 
   return (
     <div className="h-[100vh]">
       <div className="flex justify-between mt-16">
         <div className="flex gap-6 text-white">
           {
-            categoryLoading ? <h1>Loading...</h1> : categories.map(category => <Button key={category._id} name={category.name} />)
+            categoryLoading ? <h1>Loading...</h1> : categories.map(category => <Button key={category._id} name={category.name} handleCategory={handleCategory} />)
           }
         </div>
         <div className="flex gap-6 text-white">

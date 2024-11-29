@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import useAxiosPublic from "./useAxiosPublic";
 
-const useAnimals = () => {
+const useAnimals = ({category}: {category: string}) => {
     const [animals, setAnimals] = useState<{_id: string, name: string, image: string}[]>([]);
     const [animalLoading, setAnimalLoading] = useState(true);
     // const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ const useAnimals = () => {
     useEffect(() => {
         const fetchAnimals = async () => {
             try {
-                const res = await axiosPublic.get('/animals');
+                const res = await axiosPublic.get(`/animals?filter=${category}`);
                 setAnimals(res.data.animals);
                 setAnimalLoading(false);
             } catch (err) {
@@ -24,7 +24,7 @@ const useAnimals = () => {
         };
 
         fetchAnimals();
-    }, [axiosPublic]);
+    }, [axiosPublic, category]);
 
 
     return {animals, animalLoading};
