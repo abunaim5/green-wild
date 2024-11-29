@@ -5,7 +5,7 @@ import useAxiosPublic from "./useAxiosPublic";
 
 const useCategories = () => {
     const [categories, setCategories] = useState<{_id: string, name: string}[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [categoryLoading, setCategoryLoading] = useState(true);
     // const [error, setError] = useState(null);
 
     const axiosPublic = useAxiosPublic();
@@ -16,17 +16,17 @@ const useCategories = () => {
             try {
                 const res = await axiosPublic.get('/categories');
                 setCategories(res.data.categories);
-                setLoading(false);
+                setCategoryLoading(false);
             } catch (err) {
                 console.error(err)
-                setLoading(false);
+                setCategoryLoading(false);
             }
         };
 
         fetchCategories();
     }, [axiosPublic]);
 
-    return { categories, loading };
+    return { categories, categoryLoading };
 };
 
 export default useCategories;
