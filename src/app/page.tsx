@@ -4,7 +4,7 @@ export default function Home() {
   const category = ['Land Animal', 'Bird', 'Fish', 'Insect']
 
   return (
-    <div className="flex justify-between mt-24">
+    <div className="flex justify-between mt-16">
       <div className="flex gap-6 text-white">
         {
           category.map((cat, idx) => <Button key={idx} name={cat} />)
