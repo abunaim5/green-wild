@@ -1,13 +1,18 @@
+"use client"
+
 import Button from "@/components/Button";
+import useCategories from "@/hooks/useCategories";
 
 export default function Home() {
-  const category = ['Land Animal', 'Bird', 'Fish', 'Insect']
+  // const category = ['Land Animal', 'Bird', 'Fish', 'Insect']
+  const {categories, loading} = useCategories();
+  console.log(categories);
 
   return (
     <div className="flex justify-between mt-16">
       <div className="flex gap-6 text-white">
         {
-          category.map((cat, idx) => <Button key={idx} name={cat} />)
+          loading ? <h1>Loading...</h1> : categories.map(category => <Button key={category._id} name={category.name} />)
         }
       </div>
       <div className="flex gap-6 text-white">
