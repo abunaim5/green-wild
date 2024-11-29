@@ -1,5 +1,6 @@
 "use client"
 
+import AnimalCard from "@/components/AnimalCard";
 import Button from "@/components/Button";
 import useAnimals from "@/hooks/useAnimals";
 import useCategories from "@/hooks/useCategories";
@@ -7,11 +8,11 @@ import useCategories from "@/hooks/useCategories";
 export default function Home() {
   // const category = ['Land Animal', 'Bird', 'Fish', 'Insect']
   const { categories, categoryLoading } = useCategories();
-  const {animals, animalLoading} = useAnimals();
+  const { animals, animalLoading } = useAnimals();
   console.log(animals);
 
   return (
-    <div>
+    <div className="h-[100vh]">
       <div className="flex justify-between mt-16">
         <div className="flex gap-6 text-white">
           {
@@ -23,10 +24,10 @@ export default function Home() {
           <button className="border-[1px] rounded-full px-5 py-4 min-w-[100px] text-white">Add Category</button>
         </div>
       </div>
-      <div>
-          {
-            animalLoading ? <h1>Loading...</h1> : animals.map(animal => <h1 key={animal._id} className="text-white">{animal.name}</h1>)
-          }
+      <div className="grid grid-cols-6 gap-8 mt-20">
+        {
+          animalLoading ? <h1>Loading...</h1> : animals.map(animal => <AnimalCard key={animal._id} animal={animal} />)
+        }
       </div>
     </div>
   );

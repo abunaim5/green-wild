@@ -1,3 +1,4 @@
+"use client"
 
 const Button = (names: {name: string}) => {
     return (
