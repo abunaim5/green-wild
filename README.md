@@ -1,4 +1,4 @@
-# Next.js Frontend Application
+# Green Wild
 
 This is the frontend application for the MERN stack project. It is built using **Next.js** with **TypeScript** and styled using **Tailwind CSS**. The application is designed to provide category filtering, item sorting, and responsiveness based on the provided Figma design.
 
@@ -39,16 +39,16 @@ Follow the steps below to set up the project locally:
    git clone https://github.com/your-username/your-repository.git
 
 2. Navigate to the project directory:
-cd your-repository
+   cd your-repository
 
 3. Install dependencies:
-npm install
+   npm install
 
 4. Create a .env.local file in the root directory and add the necessary environment variables:
-NEXT_PUBLIC_API_BASE_URL=your_backend_api_base_url
+   NEXT_PUBLIC_API_BASE_URL=your_backend_api_base_url
 
 5. Start the development server:
-npm run dev
+   npm run dev
 
 6. Open the application in your browser:
-http://localhost:3000
+   http://localhost:3000
