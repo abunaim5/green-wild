@@ -16,7 +16,7 @@ import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 export default function Home() {
   const [category, setCategory] = useState<string>('all')
-  const { categories, categoryLoading } = useCategories();
+  const { categories, categoryLoading, refetchCategory } = useCategories();
   const { animals, animalLoading } = useAnimals({ category });
   const axiosPublic = useAxiosPublic();
 
@@ -34,8 +34,10 @@ export default function Home() {
       const res = await axiosPublic.post('/category', {
         name: form.category.value
       });
-      if(res.data.success){
+      if (res.data.success) {
         alert('success')
+        refetchCategory();
+        form.reset();
       }
     } catch (err) {
       console.log(err);
@@ -51,10 +53,11 @@ export default function Home() {
           }
         </div>
         <div className="flex gap-6 text-white">
+          <button className="border-[1px] rounded-full px-5 py-4 min-w-[100px] text-white hover:bg-[#058F34] hover:border-[#058F34] transition-all duration-500">Sort By A-Z</button>
 
           {/* Add Animal Modal */}
           <Dialog>
-            <DialogTrigger className="border-[1px] rounded-full px-5 py-4 min-w-[100px] text-white">Add Animal</DialogTrigger>
+            <DialogTrigger className="border-[1px] rounded-full px-5 py-4 min-w-[100px] text-white hover:bg-[#058F34] hover:border-[#058F34] transition-all duration-500">Add Animal</DialogTrigger>
             <DialogContent aria-describedby={undefined}>
               <DialogHeader>
                 <DialogTitle>Add Animal</DialogTitle>
@@ -68,7 +71,7 @@ export default function Home() {
 
           {/* Add Category Modal */}
           <Dialog>
-            <DialogTrigger className="border-[1px] rounded-full px-5 py-4 min-w-[100px] text-white">Add Category</DialogTrigger>
+            <DialogTrigger className="border-[1px] rounded-full px-5 py-4 min-w-[100px] text-white hover:bg-[#058F34] hover:border-[#058F34] transition-all duration-500">Add Category</DialogTrigger>
             <DialogContent aria-describedby={undefined}>
               <DialogHeader>
                 <DialogTitle>Add Category</DialogTitle>
