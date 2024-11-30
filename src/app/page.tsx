@@ -34,14 +34,11 @@ export default function Home() {
   const handleAddCategory = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
+    if (!form.category.value) return;
 
     try {
       const res = await axiosPublic.post('/category', {
         name: form.category.value
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
       });
       if (res.data.success) {
         alert('success')
@@ -67,6 +64,7 @@ export default function Home() {
   const handleAddAnimal = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
+    if (!file) return;
 
     // Upload Image to Imagebb hosting site
     try {
@@ -75,7 +73,23 @@ export default function Home() {
           'Content-Type': 'multipart/form-data'
         }
       });
-      
+      if (res.data.success) {
+        const animalData = {
+          name: form.animal.value,
+          image: res.data.data.display_url,
+          category: form.category.value
+        };
+        
+        // Add animal to the mongoDB database
+        try {
+          const res = await axiosPublic.post('/animal', animalData);
+          if (res.data.success) {
+            alert('success');
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
     } catch (err) {
       console.log(err);
     }
@@ -104,7 +118,7 @@ export default function Home() {
                 <select name="category" id="category" defaultValue='select' className="bg-gray-100 px-4 py-2 rounded-md focus:outline-none">
                   <option value='select' disabled>Select Category</option>
                   {
-                    categories.map(category => <option key={category._id} value={category.name}>{category.name}</option>)
+                    categories.map(category => <option key={category._id} value={category.name} className={category.name === 'All' ? 'hidden' : ''}>{category.name}</option>)
                   }
                 </select>
                 <div className="flex items-center justify-between w-full bg-gray-100 px-4 py-2 rounded-md">
