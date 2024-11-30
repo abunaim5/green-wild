@@ -14,8 +14,12 @@ import {
 } from "@/components/ui/dialog"
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 
+const image_hosting_key = process.env.NEXT_PUBLIC_IMAGE_HOSTING_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
+
 export default function Home() {
-  const [category, setCategory] = useState<string>('all')
+  const [category, setCategory] = useState<string>('all');
+  const [file, setFile] = useState<File | null>(null);
   const [filename, setFileName] = useState<string>('Image');
   const { categories, categoryLoading, refetchCategory } = useCategories();
   const { animals, animalLoading } = useAnimals({ category });
@@ -34,6 +38,10 @@ export default function Home() {
     try {
       const res = await axiosPublic.post('/category', {
         name: form.category.value
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       if (res.data.success) {
         alert('success')
@@ -51,7 +59,27 @@ export default function Home() {
     const uploadFile = e.target as HTMLInputElement;
     const file = uploadFile.files?.[0];
     setFileName(file ? file.name : 'Image');
-  }
+    setFile(file ? file : null);
+  };
+  console.log(file);
+
+  // handle add animal
+  const handleAddAnimal = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+
+    // Upload Image to Imagebb hosting site
+    try {
+      const res = await axiosPublic.post(image_hosting_api, { image: file }, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="h-[100vh]">
@@ -71,10 +99,10 @@ export default function Home() {
               <DialogHeader>
                 <DialogTitle>Add Animal</DialogTitle>
               </DialogHeader>
-              <form className="flex flex-col gap-4">
-                <input type="text" name="category" placeholder='Name' className="bg-gray-100 px-4 py-2 rounded-md focus:outline-none" />
-                <select name="cars" id="cars" defaultValue='select' className="bg-gray-100 px-4 py-2 rounded-md focus:outline-none">
-                <option value='select' disabled>Select Category</option>
+              <form onSubmit={handleAddAnimal} className="flex flex-col gap-4">
+                <input type="text" name="animal" placeholder='Name' className="bg-gray-100 px-4 py-2 rounded-md focus:outline-none" />
+                <select name="category" id="category" defaultValue='select' className="bg-gray-100 px-4 py-2 rounded-md focus:outline-none">
+                  <option value='select' disabled>Select Category</option>
                   {
                     categories.map(category => <option key={category._id} value={category.name}>{category.name}</option>)
                   }
