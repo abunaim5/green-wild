@@ -19,15 +19,21 @@ const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_ke
 
 export default function Home() {
   const [category, setCategory] = useState<string>('All');
+  const [sortValue, setSortValue] = useState<string>('a-z');
   const [file, setFile] = useState<File | null>(null);
   const [filename, setFileName] = useState<string>('Image');
   const { categories, categoryLoading, refetchCategory } = useCategories();
-  const { animals, animalLoading, refetchAnimals } = useAnimals({ category });
+  const { animals, animalLoading, refetchAnimals } = useAnimals({ category, sortValue });
   const axiosPublic = useAxiosPublic();
 
   // handle filter category
   const handleCategory = (category: string) => {
     setCategory(category);
+  };
+
+  // handle sort a-z and z-a
+  const handleSortAnimal = (order: string) => {
+    setSortValue(order);
   };
 
   // handle add category
@@ -104,7 +110,7 @@ export default function Home() {
           }
         </div>
         <div className="flex gap-6 text-white">
-          <button className="border-[1px] rounded-full px-5 py-4 min-w-[100px] text-white hover:bg-[#058F34] hover:border-[#058F34] transition-all duration-500">Sort By A-Z</button>
+          <button onClick={() => handleSortAnimal(sortValue === 'a-z' ? 'z-a' : 'a-z')} className="border-[1px] rounded-full px-5 py-4 min-w-[100px] text-white hover:bg-[#058F34] hover:border-[#058F34] transition-all duration-500">Sort By <span className="uppercase">{sortValue}</span></button>
 
           {/* Add Animal Modal */}
           <Dialog>

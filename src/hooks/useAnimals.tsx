@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import useAxiosPublic from "./useAxiosPublic";
 
-const useAnimals = ({category}: {category: string}) => {
+const useAnimals = ({category, sortValue}: {category: string, sortValue: string}) => {
     const [animals, setAnimals] = useState<{_id: string, name: string, image: string}[]>([]);
     const [animalLoading, setAnimalLoading] = useState(true);
     // const [error, setError] = useState(null);
@@ -12,7 +12,7 @@ const useAnimals = ({category}: {category: string}) => {
 
     const fetchAnimals = useCallback(async () => {
         try {
-            const res = await axiosPublic.get(`/animals?filter=${category}`);
+            const res = await axiosPublic.get(`/animals?filter=${category}&sort_by=${sortValue}`);
             setAnimals(res.data.animals);
             console.log(res.data.animals)
             setAnimalLoading(false);
@@ -20,7 +20,7 @@ const useAnimals = ({category}: {category: string}) => {
             console.error(err)
             setAnimalLoading(false);
         }
-    }, [axiosPublic, category]);
+    }, [axiosPublic, category, sortValue]);
 
     useEffect(() => {
         fetchAnimals();
