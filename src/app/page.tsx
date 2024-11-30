@@ -16,6 +16,7 @@ import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 export default function Home() {
   const [category, setCategory] = useState<string>('all')
+  const [filename, setFileName] = useState<string>('Image');
   const { categories, categoryLoading, refetchCategory } = useCategories();
   const { animals, animalLoading } = useAnimals({ category });
   const axiosPublic = useAxiosPublic();
@@ -44,6 +45,14 @@ export default function Home() {
     }
   };
 
+  // handle file change when upload image
+  const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const uploadFile = e.target as HTMLInputElement;
+    const file = uploadFile.files?.[0];
+    setFileName(file ? file.name : 'Image');
+  }
+
   return (
     <div className="h-[100vh]">
       <div className="flex justify-between mt-16">
@@ -62,9 +71,22 @@ export default function Home() {
               <DialogHeader>
                 <DialogTitle>Add Animal</DialogTitle>
               </DialogHeader>
-              <form>
-                <input type="text" />
-                <button type="submit">Save</button>
+              <form className="flex flex-col gap-4">
+                <input type="text" name="category" placeholder='Name' className="bg-gray-100 px-4 py-2 rounded-md focus:outline-none" />
+                <select name="cars" id="cars" defaultValue='select' className="bg-gray-100 px-4 py-2 rounded-md focus:outline-none">
+                <option value='select' disabled>Select Category</option>
+                  {
+                    categories.map(category => <option key={category._id} value={category.name}>{category.name}</option>)
+                  }
+                </select>
+                <div className="flex items-center justify-between w-full bg-gray-100 px-4 py-2 rounded-md">
+                  <span>{filename}</span>
+                  <label htmlFor="image" className="cursor-pointer bg-gray-300 rounded-md px-2">
+                    upload
+                    <input onChange={handleFileChange} type="file" id="image" name="image" className="hidden" />
+                  </label>
+                </div>
+                <button type="submit" className="bg-black hover:bg-gray-800 text-white rounded-md mt-4 py-2 cursor-pointer">Create Animal</button>
               </form>
             </DialogContent>
           </Dialog>
