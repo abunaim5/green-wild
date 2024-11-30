@@ -18,11 +18,11 @@ const image_hosting_key = process.env.NEXT_PUBLIC_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 export default function Home() {
-  const [category, setCategory] = useState<string>('all');
+  const [category, setCategory] = useState<string>('All');
   const [file, setFile] = useState<File | null>(null);
   const [filename, setFileName] = useState<string>('Image');
   const { categories, categoryLoading, refetchCategory } = useCategories();
-  const { animals, animalLoading } = useAnimals({ category });
+  const { animals, animalLoading, refetchAnimals } = useAnimals({ category });
   const axiosPublic = useAxiosPublic();
 
   // handle filter category
@@ -58,7 +58,6 @@ export default function Home() {
     setFileName(file ? file.name : 'Image');
     setFile(file ? file : null);
   };
-  console.log(file);
 
   // handle add animal
   const handleAddAnimal = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -77,14 +76,15 @@ export default function Home() {
         const animalData = {
           name: form.animal.value,
           image: res.data.data.display_url,
-          category: form.category.value
+          category: form.category.value.toLowerCase()
         };
-        
+
         // Add animal to the mongoDB database
         try {
           const res = await axiosPublic.post('/animal', animalData);
           if (res.data.success) {
             alert('success');
+            refetchAnimals();
           }
         } catch (err) {
           console.error(err);

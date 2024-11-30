@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useAxiosPublic from "./useAxiosPublic";
 
 const useAnimals = ({category}: {category: string}) => {
@@ -10,23 +10,24 @@ const useAnimals = ({category}: {category: string}) => {
 
     const axiosPublic = useAxiosPublic();
 
-    useEffect(() => {
-        const fetchAnimals = async () => {
-            try {
-                const res = await axiosPublic.get(`/animals?filter=${category}`);
-                setAnimals(res.data.animals || []);
-                setAnimalLoading(false);
-            } catch (err) {
-                console.error(err)
-                setAnimalLoading(false);
-            }
-        };
-
-        fetchAnimals();
+    const fetchAnimals = useCallback(async () => {
+        try {
+            const res = await axiosPublic.get(`/animals?filter=${category}`);
+            setAnimals(res.data.animals);
+            console.log(res.data.animals)
+            setAnimalLoading(false);
+        } catch (err) {
+            console.error(err)
+            setAnimalLoading(false);
+        }
     }, [axiosPublic, category]);
 
+    useEffect(() => {
+        fetchAnimals();
+    }, [fetchAnimals]);
 
-    return {animals, animalLoading};
+
+    return {animals, animalLoading, refetchAnimals: fetchAnimals};
 };
 
 export default useAnimals;
