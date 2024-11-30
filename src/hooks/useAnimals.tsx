@@ -2,11 +2,8 @@
 
 import { useEffect, useState } from "react";
 import useAxiosPublic from "./useAxiosPublic";
-// import { useQuery } from "@tanstack/react-query";
-// import { debounce } from "lodash";
 
 const useAnimals = ({category}: {category: string}) => {
-    console.log(category);
     const [animals, setAnimals] = useState<{_id: string, name: string, image: string}[]>([]);
     const [animalLoading, setAnimalLoading] = useState(true);
     // const [error, setError] = useState(null);

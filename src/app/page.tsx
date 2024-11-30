@@ -12,21 +12,35 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 export default function Home() {
-  // const category = ['Land Animal', 'Bird', 'Fish', 'Insect']
   const [category, setCategory] = useState<string>('all')
   const { categories, categoryLoading } = useCategories();
   const { animals, animalLoading } = useAnimals({ category });
+  const axiosPublic = useAxiosPublic();
 
+  // handle filter category
   const handleCategory = (category: string) => {
-    console.log(category);
-    setCategory(category)
+    setCategory(category);
   };
 
-  const handleAddCategory = e => {
+  // handle add category
+  const handleAddCategory = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  }
+    const form = e.target as HTMLFormElement;
+
+    try {
+      const res = await axiosPublic.post('/category', {
+        name: form.category.value
+      });
+      if(res.data.success){
+        alert('success')
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="h-[100vh]">
@@ -37,27 +51,31 @@ export default function Home() {
           }
         </div>
         <div className="flex gap-6 text-white">
+
+          {/* Add Animal Modal */}
           <Dialog>
             <DialogTrigger className="border-[1px] rounded-full px-5 py-4 min-w-[100px] text-white">Add Animal</DialogTrigger>
-            <DialogContent>
+            <DialogContent aria-describedby={undefined}>
               <DialogHeader>
                 <DialogTitle>Add Animal</DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleAddCategory}>
+              <form>
                 <input type="text" />
                 <button type="submit">Save</button>
               </form>
             </DialogContent>
           </Dialog>
+
+          {/* Add Category Modal */}
           <Dialog>
             <DialogTrigger className="border-[1px] rounded-full px-5 py-4 min-w-[100px] text-white">Add Category</DialogTrigger>
-            <DialogContent>
+            <DialogContent aria-describedby={undefined}>
               <DialogHeader>
                 <DialogTitle>Add Category</DialogTitle>
               </DialogHeader>
-              <form className="flex flex-col">
-                <input type="text" placeholder='Name' className="bg-gray-100 px-4 py-2 rounded-md" />
-                <button type="submit" className="bg-black text-white rounded-md mt-4 py-2 cursor-pointer">Save</button>
+              <form onSubmit={handleAddCategory} className="flex flex-col">
+                <input type="text" name="category" placeholder='Name' className="bg-gray-100 px-4 py-2 rounded-md focus:outline-none" />
+                <button type="submit" className="bg-black hover:bg-gray-800 text-white rounded-md mt-8 py-2 cursor-pointer">Save</button>
               </form>
             </DialogContent>
           </Dialog>
